@@ -1,0 +1,6 @@
+.idea/
+.github/
+nbproject/
+.pullapprove.yml
+config.yml
+phpstorm_codeformatting.xml
