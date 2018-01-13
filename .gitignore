@@ -4,3 +4,4 @@ nbproject/
 .pullapprove.yml
 config.yml
 phpstorm_codeformatting.xml
+!resources/config.yml

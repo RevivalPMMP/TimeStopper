@@ -25,17 +25,16 @@ use RevivalPMMP\TimeStopper\Data\ConfigurationData;
 
 class TimeStopper extends PluginBase{
 
-	private $instance;
+	/** @var TimeStopper $instance */
+	private static $instance;
 
-	/**
-	 * @var ConfigurationData
-	 */
+	/** @var ConfigurationData $config */
 	private $config;
 
 	public function onLoad() {
-		$this->instance = $this;
+		self::$instance = $this;
 		$this->saveDefaultConfig();
-		$this->config =new ConfigurationData($this);
+		$this->config = new ConfigurationData($this);
 		$this->getServer()->getLogger()->info(TextFormat::DARK_PURPLE . "Restore Loaded!");
 
 	}
@@ -43,19 +42,16 @@ class TimeStopper extends PluginBase{
 	public function onEnable() {
 		if($this->config->getSetting(ConfigKeys::STOP_TIME)) {
 			foreach ( $this->getServer()->getLevels() as $level ) {
-				$level->checkTime();
 				$level->setTime( $this->config->getSetting( ConfigKeys::DEFAULT_TIME ) );
-				$level->checkTime();
 				$level->stopTime();
-				$level->checkTime();
 			}
 			$this->getServer()->getLogger()->info(TextFormat::DARK_PURPLE . "TimeStopper Enabled!");
 		} else {
-			$this->onDisable();
+			$this->setEnabled(false);
 		}
 	}
 
-	public function getInstance() {
-		return $this->instance;
+	public static function getInstance() : self {
+		return self::$instance;
 	}
 }
