@@ -20,8 +20,8 @@ namespace RevivalPMMP\TimeStopper;
 
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
-use RevivalPMMP\TimeStopper\Data\ConfigKeys;
-use RevivalPMMP\TimeStopper\Data\ConfigurationData;
+use RevivalPMMP\TimeStopper\data\ConfigKeys;
+use RevivalPMMP\TimeStopper\data\ConfigurationData;
 
 class TimeStopper extends PluginBase{
 
