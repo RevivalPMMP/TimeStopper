@@ -1,2 +1,5 @@
-Stop-Time: false
-Default-Time: 0
+# Setting this option to true will stop time on server restarts.
+Stop-Time: true
+
+# When Stop-Time is set to true, time will be set to this value before stopping time.
+Default-Time: 7000
