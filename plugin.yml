@@ -3,9 +3,10 @@ main: RevivalPMMP\TimeStopper\TimeStopper
 version: 1.0.0
 api:
 - 3.0.0-ALPHA10
+- 3.0.0-ALPHA11
 load: POSTWORLD
 authors:
 - "RevivalPMMP"
 - "95CivicSi"
 - "jasonwynn10"
-description: "Restores server settings on restarts (eg time stopped)."
+description: "Sets and stops server time on server restarts."
