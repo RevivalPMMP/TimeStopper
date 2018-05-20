@@ -35,7 +35,6 @@ class TimeStopper extends PluginBase{
 		self::$instance = $this;
 		$this->saveDefaultConfig();
 		$this->config = new ConfigurationData($this);
-		$this->getServer()->getLogger()->info(TextFormat::DARK_PURPLE . "Restore Loaded!");
 
 	}
 
@@ -45,7 +44,6 @@ class TimeStopper extends PluginBase{
 				$level->setTime( $this->config->getSetting( ConfigKeys::DEFAULT_TIME ) );
 				$level->stopTime();
 			}
-			$this->getServer()->getLogger()->info(TextFormat::DARK_PURPLE . "TimeStopper Enabled!");
 		} else {
 			$this->setEnabled(false);
 		}
