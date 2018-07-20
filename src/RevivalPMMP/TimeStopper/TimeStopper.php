@@ -19,7 +19,6 @@
 namespace RevivalPMMP\TimeStopper;
 
 use pocketmine\plugin\PluginBase;
-use pocketmine\utils\TextFormat;
 use RevivalPMMP\TimeStopper\data\ConfigKeys;
 use RevivalPMMP\TimeStopper\data\ConfigurationData;
 
