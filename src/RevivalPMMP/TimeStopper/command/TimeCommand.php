@@ -32,7 +32,7 @@ class TimeCommand extends Command{
 		$plugin = TimeStopper::getInstance();
 
 
-		switch(strtolower($args[0])){
+		switch($args[0]){
 			case "add":
 				if($sender->hasPermission("pocketmine.command.time.add")){
 					if(!isset($args[1]) or !is_numeric($args[1])){
