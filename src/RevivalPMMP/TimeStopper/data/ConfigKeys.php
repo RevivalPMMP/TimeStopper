@@ -22,4 +22,5 @@ namespace RevivalPMMP\TimeStopper\data;
 class ConfigKeys{
 	const STOP_TIME = "Stop-Time";
 	const DEFAULT_TIME = "Default-Time";
+	const SAVE_CHANGES = "Save-Changes";
 }

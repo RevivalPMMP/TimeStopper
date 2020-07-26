@@ -146,7 +146,7 @@ class TimeStopper extends PluginBase implements Listener{
 	}
 
 	public function onDisable(){
-		if(!$this->getConfig()->get("Save-Changes")){
+		if(!$this->getConfig()->get(ConfigKeys::SAVE_CHANGES)){
 			return;
 		}
 		if($this->getConfig()->hasChanged()){
