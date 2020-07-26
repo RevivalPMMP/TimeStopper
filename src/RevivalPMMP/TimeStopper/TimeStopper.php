@@ -74,7 +74,7 @@ class TimeStopper extends PluginBase implements Listener{
 				$value = Level::TIME_SUNRISE;
 				break;
 			default:
-				if(!is_int($time) or ($time < 0 and !$add)){
+				if(!is_numeric($time) or ($time < 0 and !$add)){
 					$value = 0;
 				}else{
 					$value = (int) $time;
