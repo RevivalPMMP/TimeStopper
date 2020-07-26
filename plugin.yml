@@ -1,14 +1,8 @@
 name: TimeStopper
 main: RevivalPMMP\TimeStopper\TimeStopper
-version: 1.0.3
+version: 2.0.0
 api:
-- 3.0.0-ALPHA10
-- 3.0.0-ALPHA11
-- 3.0.0-ALPHA12
 - 3.0.0
 load: POSTWORLD
-authors:
-- "RevivalPMMP"
-- "95CivicSi"
-- "jasonwynn10"
-description: "Sets and stops server time on server restarts."
+author: "RevivalPMMP"
+description: "Control time on your server!."

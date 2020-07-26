@@ -18,37 +18,130 @@
 
 namespace RevivalPMMP\TimeStopper;
 
+use pocketmine\command\defaults\TimeCommand as PMTimeCommand;
+use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\level\Level;
+use pocketmine\network\mcpe\protocol\GameRulesChangedPacket;
+use pocketmine\network\mcpe\protocol\types\GameRuleType;
+use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
+use RevivalPMMP\TimeStopper\command\TimeCommand;
 use RevivalPMMP\TimeStopper\data\ConfigKeys;
-use RevivalPMMP\TimeStopper\data\ConfigurationData;
 
-class TimeStopper extends PluginBase{
+class TimeStopper extends PluginBase implements Listener{
 
 	/** @var TimeStopper $instance */
 	private static $instance;
 
-	/** @var ConfigurationData $config */
-	private $config;
+	/** @var int */
+	private $defaultTime = Level::TIME_DAY;
 
-	public function onLoad() {
-		self::$instance = $this;
-		$this->saveDefaultConfig();
-		$this->config = new ConfigurationData($this);
-
-	}
+	/** @var bool */
+	private $timeStopped = false;
 
 	public function onEnable() {
-		if($this->config->getSetting(ConfigKeys::STOP_TIME)) {
-			foreach ( $this->getServer()->getLevels() as $level ) {
-				$level->setTime( $this->config->getSetting( ConfigKeys::DEFAULT_TIME ) );
+		self::$instance = $this;
+
+		$config = $this->getConfig();
+		$this->defaultTime = $config->get(ConfigKeys::DEFAULT_TIME, Level::TIME_DAY);
+		$this->timeStopped = $config->get(ConfigKeys::STOP_TIME, false);
+		$this->registerCommands();
+		$this->getServer()->getPluginManager()->registerEvents($this, $this);
+		if($this->timeStopped){
+			$this->setTime($this->defaultTime);
+		}
+	}
+
+	public function setTime($time, bool $add = false) : void{
+		switch(strtolower($time)){
+			case "day":
+				$value = Level::TIME_DAY;
+				break;
+			case "noon":
+				$value = Level::TIME_NOON;
+				break;
+			case "sunset":
+				$value = Level::TIME_SUNSET;
+				break;
+			case "night":
+				$value = Level::TIME_NIGHT;
+				break;
+			case "midnight":
+				$value = Level::TIME_MIDNIGHT;
+				break;
+			case "sunrise":
+				$value = Level::TIME_SUNRISE;
+				break;
+			default:
+				if(!is_int($time) or ($time < 0 and !$add)){
+					$value = 0;
+				}else{
+					$value = (int) $time;
+				}
+				break;
+		}
+
+		$this->getConfig()->set(ConfigKeys::DEFAULT_TIME, $value);
+		foreach($this->getServer()->getLevels() as $level){
+			if($add){
+				$level->setTime($level->getTime() + $value);
+			}else{
+				$level->setTime($value);
+			}
+			if($this->timeStopped){
 				$level->stopTime();
 			}
-		} else {
-			$this->setEnabled(false);
 		}
+	}
+
+	public function startTime() : void{
+		if(!$this->timeStopped){
+			return;
+		}
+		$this->timeStopped = false;
+		$this->getConfig()->set(ConfigKeys::STOP_TIME, false);
+		foreach($this->getServer()->getLevels() as $level){
+			$level->startTime();
+		}
+		$this->sendGameRuleUpdate($this->getServer()->getOnlinePlayers());
+	}
+
+	public function stopTime() : void{
+		if($this->timeStopped){
+			return;
+		}
+		$this->timeStopped = true;
+		$this->getConfig()->set(ConfigKeys::STOP_TIME, false);
+		foreach($this->getServer()->getLevels() as $level){
+			$level->stopTime();
+		}
+		$this->sendGameRuleUpdate($this->getServer()->getOnlinePlayers());
 	}
 
 	public static function getInstance() : self {
 		return self::$instance;
+	}
+
+	public function onJoin(PlayerJoinEvent $event): void{
+		$player = $event->getPlayer();
+		$this->sendGameRuleUpdate([$player]);
+	}
+
+	/**
+	 * @param Player[] $players
+	 */
+	private function sendGameRuleUpdate(array $players) : void{
+		$pk = new GameRulesChangedPacket();
+		$pk->gameRules = ["dodaylightcycle" => [GameRuleType::BOOL, !$this->timeStopped]];
+		$this->getServer()->broadcastPacket($players, $pk);
+	}
+
+	private function registerCommands() : void{
+		$map = $this->getServer()->getCommandMap();
+		if(($baseCommand = $map->getCommand("time")) instanceof PMTimeCommand){
+			$map->unregister($baseCommand);
+		}
+		$map->register("timestopper", new TimeCommand());
 	}
 }
