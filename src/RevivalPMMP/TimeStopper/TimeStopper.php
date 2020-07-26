@@ -144,4 +144,13 @@ class TimeStopper extends PluginBase implements Listener{
 		}
 		$map->register("timestopper", new TimeCommand());
 	}
+
+	public function onDisable(){
+		if(!$this->getConfig()->get("Save-Changes")){
+			return;
+		}
+		if($this->getConfig()->hasChanged()){
+			$this->saveConfig();
+		}
+	}
 }

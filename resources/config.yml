@@ -3,3 +3,6 @@ Stop-Time: true
 
 # When Stop-Time is set to true, time will be set to this value before stopping time.
 Default-Time: 7000
+
+# Change this to true if you want changes made with the time command to be used on server restarts.
+Save-Changes: false
